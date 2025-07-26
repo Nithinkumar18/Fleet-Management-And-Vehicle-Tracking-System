@@ -8,7 +8,8 @@ require('dotenv').config();
 
 const PORT = process.env.PORT;
 
-mongoose.connect(process.env.MONGODB_URL).then(() => {
+mongoose.connect(process.env.MONGODB_URL)
+.then(() => {
     
     logger.info(`${messageInfo.SERVICE} connected to database ✅`)
 
@@ -16,6 +17,9 @@ mongoose.connect(process.env.MONGODB_URL).then(() => {
         
         logger.info(`${messageInfo.SERVICE} started on PORT ${PORT} 👤`);
     })
+}).catch((err) => 
+{
+    logger.error(`${messageInfo.SERVICE} failed  to connect  database `,err);
 })
 
 
