@@ -47,7 +47,8 @@ const deleteUser = async (id) => {
             logger.info(`SERVICE - ${responseInfo.SERVICE} : ${responseInfo.USER_DEACTIVATION_SUCCESS}`);
             logger.info(`User With Id ${user_rm._id} Deactivated`);
             return {
-                userId: user_rm._id
+                userId: user_rm._id,
+                updatedAt:user_rm.updatedAt
             }
         }
     }
