@@ -1,10 +1,16 @@
+const app = express();
+const cors = require('cors');
+const userRoutes = require('./src/routes/userRoutes');
 const express = require('express');
 const mongoose = require('mongoose');
 const logger = require('./src/loggers/logger');
 const messageInfo = require('./src/constants/responseInfo');
-const app = express();
 require('dotenv').config();
 
+
+app.use(express.json());
+app.use(cors());
+app.use('/v1/user',userRoutes);
 
 const PORT = process.env.PORT;
 
