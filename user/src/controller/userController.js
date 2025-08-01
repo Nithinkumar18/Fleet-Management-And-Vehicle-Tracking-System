@@ -53,11 +53,25 @@ const deactivateUser = async(req,res) => {
     }
 }
 
+const viewUserProfile = async(req,res) => {
+    try{
+      const email = req.params.email;
+      logger.info(`SERVICE - ${responseInfo.SERVICE} : ${req.URL}`);
+      const userDetails = await userService.viewUserProfile(email);
+      return res.status(httpCodes.SUCCESS).json({userDetails});
+    }
+    catch(err){
+        logger.error(`SERVICE - ${responseInfo.SERVICE} : ${responseInfo.ERR_USER_DATA}`)
+        return res.status(httpCodes.INTERNAL_SERVER_ERROR).json({message:responseInfo.ERR_USER_DATA});
+    }
+    
+}
 
 module.exports = {
 
     enrollUser,
     updateAcc,
-    deactivateUser
+    deactivateUser,
+    viewUserProfile
 
 }
