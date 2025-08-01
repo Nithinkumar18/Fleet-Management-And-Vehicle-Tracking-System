@@ -1,15 +1,20 @@
+const bcrypt = require('bcrypt');
 const user = require('./model/user');
 const logger = require('./loggers/logger');
 const responseInfo = require('./constants/responseInfo');
+require("dotenv").config();
 
 
 const registerUser = async (_user) => {
 
     try {
+         const preEncrypted = _user.password;
+         const encryptedPass = hashPassword(preEncrypted);
+         _user.password = encryptedPass;
         const _newUser = await user.create(_user);
 
         logger.info(`SERVICE - ${responseInfo.SERVICE} : ${responseInfo.USER_REGESTRATION_SUCCESS}`);
-        logger.info(`Created User Info ${_newUser._id}: created At: ${_newUser.createdAT}`);
+        logger.info(`Created User Info ${_newUser._id}: created At: ${_newUser.createdAt}`);
         return {
             user_id: _newUser._id,
         }
@@ -59,8 +64,29 @@ const deleteUser = async (id) => {
 }
 
 
+const hashPassword = (pwd) => {
+    const hashRounds = parseInt(process.env.hashRounds,10);
+    const encryptedPassword = bcrypt.hashSync(pwd,hashRounds);
+    return encryptedPassword;
+
+}
+
+const userProfile = async(uemail) => {
+
+    try{
+       const validUser = await user.findOne({email:uemail});
+       logger.info(`SERVICE - ${responseInfo.SERVICE} `);
+        return validUser;
+    }
+    catch(err){
+        logger.error(`SERVICE - ${responseInfo.SERVICE} : ${responseInfo.ERR_USER_DATA}`);
+       throw new Error(responseInfo.ERR_USER_DATA);
+    }
+
+}
 module.exports = {
     registerUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    userProfile
 }
